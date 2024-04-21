@@ -1,0 +1,16 @@
+{% extends "_base.html" %} {% block title %}{{ 'Редактирование' if edit_note is
+defined else 'Создание' }} заметки{% endblock %} {% block content %} {% from
+"_formhelper.html" import render_field %}
+<form
+  method="POST"
+  action="{{ url_for('notes.edit_note', note_id=note_id) if edit_note is defined else url_for('notes.create_note') }}"
+>
+  <div>
+    {{ form.csrf_token }} {{ render_field(form.name, size=50) }}
+    <br />
+    {{ render_field(form.content, rows=10, cols=100) }}
+    <br />
+  </div>
+  <input type="submit" class="btn btn-primary" value="Отправить" />
+</form>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "_base.html" %} {% block title %}Главная{% endblock %} {% block
+content %} {% set rows = 3 %} {% set cols = 3 %}
+<h3>Заметки</h3>
+
+<div class="container-fluid">
+  <form
+    class="input-group mb-2"
+    action="{{ url_for('notes.search_note') }}"
+    method="POST"
+  >
+    <input type="text" class="form-control" placeholder="Поиск" name="search" />
+    <button class="btn btn-outline-primary" type="submit">Поиск</button>
+  </form>
+  <a
+    class="btn btn-primary mb-2"
+    href="{{ url_for('notes.create_note') }}"
+    role="button"
+    >Создать новую</a
+  >
+  {% for note in notes %} {% if loop.index0 // rows != (loop.index0 - 1) // rows
+  %}
+  <div class="row">
+    {% endif %}
+    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+      <div class="card" style="width: 18rem">
+        <div class="card-body">
+          <h5 class="card-title">{{ note.name }}</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">
+            Изменено: {{ note.updated_at.strftime('%d-%m-%Y %H:%M') }}
+          </h6>
+          <p class="card-text">{{ note.content | truncate(12) }}</p>
+          <a
+            href="{{ url_for('notes.show_note', note_id=note.id) }}"
+            class="btn btn-primary"
+            >Открыть</a
+          >
+          <form
+            action="{{ url_for('notes.delete_note', note_id=note.id) }}"
+            method="POST"
+          >
+            <input type="hidden" value="{{ note.id }}" name="note_to_delete" />
+            <input type="submit" class="btn btn-danger" value="Удалить" />
+          </form>
+        </div>
+      </div>
+    </div>
+    {% if loop.index0 % cols == 2 %}
+  </div>
+  {% endif %} {% endfor %}
+</div>
+{% endblock %}
